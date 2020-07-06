@@ -74,13 +74,15 @@ code {
 }
 
 .post-title {
+  color: #373a3c !important;
   font-weight: bold;
   font-size: 20px;
 }
 
-.post-content {
+.post-description {
+  color: #999;
   font-weight: lighter;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .ant-layout, .ant-layout-header {
@@ -92,5 +94,33 @@ code {
 }
 
 .ant-tabs-ink-bar {
+  background-color: #5cb85c !important;
+}
+
+.article-tag {
+  padding: 0 8px 0 !important;
+  border-radius: 10px !important;
+  color: #aaa !important;
+  background-color: white !important;
+  float: right !important;
+  margin-right: 5px;
+}
+
+.favorite-button {
+  font-size: 12px;
+  border: 1px solid #5cb85c;
+  color: #5cb85c;
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
+.favorite-button:hover {
+  cursor: pointer;
+  color: white;
+  background-color: #5cb85c;
+}
+
+.button-submit {
+  border: none !important;
   background-color: #5cb85c !important;
 }

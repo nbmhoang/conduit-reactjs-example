@@ -1,12 +1,23 @@
 import React from 'react';
 
 import dayjs from 'dayjs';
-import { Avatar, List, Pagination } from 'antd';
+import { Avatar, List, Pagination, Tag } from 'antd';
+import { Link } from 'react-router-dom';
 
-import { HeartOutlined } from '@ant-design/icons';
+import { HeartFilled } from '@ant-design/icons';
 
 
 function ArticleList({source, loadArticle, page, tag}) {
+    const ArticleTag = (article) => {
+        return (
+            article.article.tagList.map(tag => {       
+                return (
+                    <Tag className="article-tag">{tag}</Tag>
+                )
+            })
+        )  
+    }
+
     return (
         <>
             <List
@@ -17,21 +28,26 @@ function ArticleList({source, loadArticle, page, tag}) {
                     <List.Item
                         key={index}
                         actions={[
-                            <span style={{fontSize:10}}>Read more...</span>,    
+                            <span style={{fontSize:10}}>Read more...</span>,
+                            <ArticleTag article={item} />,
                         ]}
                         extra={
-                            <HeartOutlined />
+                            <>
+                                <div className="favorite-button">
+                                    <HeartFilled /> {item.favoritesCount}
+                                </div>
+                            </>
                         }
                         >
                         <List.Item.Meta
                         avatar={<Avatar src={item.author.image} />}
-                        title={<a className="user" href="#">{item.author.username}</a>}
+                        title={<Link className="user" to="/user">{item.author.username}</Link>}
                         description={dayjs(item.createdAt).format('ddd MMM DD YYYY')}
                         />
-                        <div className="post-preview">
+                        <Link className="post-preview" to={`/article/${item.slug}`}>
                             <div className="post-title">{item.title}</div>
-                            <div>{item.description}</div>
-                        </div>
+                            <div className="post-description">{item.description}</div>
+                        </Link>
                     </List.Item>
                 )}
             />
