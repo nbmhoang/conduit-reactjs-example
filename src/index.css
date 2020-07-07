@@ -19,6 +19,7 @@ code {
 }
 
 #banner {
+  height: 100% !important;
   background-color: #5cb85c;
   color: white !important;
   text-align: center;
@@ -34,9 +35,10 @@ code {
 }
 
 .ant-tag {
-  background-color: #687077 !important;
+  background-color: #818a91 !important;
   border-radius: 12px !important;
   color: white !important;
+  padding-bottom: 2px !important;
 }
 
 .heart-icon-x {
@@ -50,10 +52,6 @@ code {
 
 .tag-list {
   margin-left: 10px;
-}
-
-.tag:hover {
-  cursor: pointer;
 }
 
 .popular-tag {
@@ -127,4 +125,13 @@ code {
 
 .hint-text {
   margin-bottom: 10px !important;
+}
+
+.tag:hover {
+  cursor: pointer;
+}
+
+.selected {
+  text-decoration: underline;
+  background-color: #687077 !important;
 }

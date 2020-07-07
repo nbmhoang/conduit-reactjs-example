@@ -7,7 +7,15 @@ import { Link } from 'react-router-dom';
 import { HeartFilled } from '@ant-design/icons';
 
 
-function ArticleList({source, loadArticle, page, tag}) {
+function ArticleList({source, loadArticle, page, tag, total}) {
+    if (!source) {
+        return (
+            <>
+                Loading...
+            </>
+        )
+    }
+    
     const ArticleTag = (article) => {
         return (
             article.article.tagList.map(tag => {       
@@ -23,7 +31,7 @@ function ArticleList({source, loadArticle, page, tag}) {
             <List
                 itemLayout="vertical"
                 size="large"
-                dataSource={source.articles}
+                dataSource={source}
                 renderItem={(item, index) => (
                     <List.Item
                         key={index}
@@ -54,7 +62,7 @@ function ArticleList({source, loadArticle, page, tag}) {
             <Pagination
                 current={page}
                 showSizeChanger={false}
-                total={source.articlesCount}
+                total={total}
                 onChange={(page) => {
                     loadArticle(page, tag);
                 }}
