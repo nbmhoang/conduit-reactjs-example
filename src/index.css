@@ -124,3 +124,7 @@ code {
   border: none !important;
   background-color: #5cb85c !important;
 }
+
+.hint-text {
+  margin-bottom: 10px !important;
+}

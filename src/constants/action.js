@@ -1,0 +1,9 @@
+export const HOME_PAGE_LOADED = 'HOME_PAGE_LOADED';
+export const HOME_PAGE_UNLOADED = 'HOME_PAGE_UNLOADED';
+export const ARTICLE_PAGE_LOADED = 'ARTICLE_PAGE_LOADED';
+export const ARTICLE_PAGE_UNLOADED = 'ARTICLE_PAGE_UNLOADED';
+export const CHANGE_TAB = 'CHANGE_TAB';
+export const APPLY_TAG_FILTER = 'APPLY_TAG_FILTER';
+export const LOGIN = 'LOGIN';
+export const LOGOUT = 'LOGOUT';
+export const REGISTER = 'REGISTER';

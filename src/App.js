@@ -5,13 +5,10 @@ import { Layout } from 'antd';
 import 'antd/dist/antd.css';
 import './index.css';
 
-import Home from './Home';
-import SignIn from './SignIn';
-import SignUp from './SignUp';
-import Article from './Article';
-
-const { Footer } = Layout;
-
+import Home from './components/Home';
+import SignIn from './components/SignIn';
+import SignUp from './components/SignUp';
+import Article from './components/Article/Article';
 
 const App = () => {
   return (
@@ -25,10 +22,6 @@ const App = () => {
             <Route exact path="/article/:id" component={Article}  />
           </Switch>
         </BrowserRouter>
-        
-        <Footer>
-          <h3>Fork on Github</h3>
-        </Footer>
       </Layout>
     </div>
   );
