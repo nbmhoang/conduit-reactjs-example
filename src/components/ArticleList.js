@@ -7,7 +7,16 @@ import { Link } from 'react-router-dom';
 import { HeartFilled } from '@ant-design/icons';
 
 
-function ArticleList({source, loadArticle, page, tag, total}) {
+function ArticleList({tabName, source, loadArticle, currentPage, total}) {
+
+    if (tabName === 'Your Feed') {
+        return (
+            <>
+                No articles are here... yet.
+            </>
+        )
+    }
+
     if (!source) {
         return (
             <>
@@ -36,7 +45,7 @@ function ArticleList({source, loadArticle, page, tag, total}) {
                     <List.Item
                         key={index}
                         actions={[
-                            <span style={{fontSize:10}}>Read more...</span>,
+                            <Link to={`/article/${item.slug}`} style={{fontSize:10}}>Read more...</Link>,
                             <ArticleTag article={item} />,
                         ]}
                         extra={
@@ -60,11 +69,11 @@ function ArticleList({source, loadArticle, page, tag, total}) {
                 )}
             />
             <Pagination
-                current={page}
+                current={currentPage}
                 showSizeChanger={false}
                 total={total}
                 onChange={(page) => {
-                    loadArticle(page, tag);
+                    loadArticle(page);
                 }}
             />
         </>

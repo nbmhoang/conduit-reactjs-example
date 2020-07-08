@@ -8,20 +8,20 @@ import * as serviceWorker from './serviceWorker';
 import { createStore, applyMiddleware, compose } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
-import { loadArticle, loadPopularTag } from './constants/action';
-import homeTest from './reducers/homeTest';
+// import { loadArticle, loadPopularTag } from './constants/action';
+import rootReducers from './reducers';
 import rootSaga from './sagas';
 
 const sagaMiddleware = createSagaMiddleware();
 const store = createStore(
-    homeTest,
+    rootReducers,
     compose(applyMiddleware(sagaMiddleware), window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 );
 
 sagaMiddleware.run(rootSaga);
 
-store.dispatch(loadArticle());
-store.dispatch(loadPopularTag());
+// store.dispatch(loadArticle());
+// store.dispatch(loadPopularTag());
 
 
 ReactDOM.render(<App store={store} />,document.getElementById('root'));

@@ -1,10 +1,12 @@
 import React from 'react';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Col, Row } from 'antd';
 import { Link } from 'react-router-dom';
 
 export default function PageHeader() {
     const { Header } = Layout;
     return (
+      <Row>
+        <Col span={12} offset={6}>
         <Header>
           <Link to="/">
             <div className="logo" />Conduit
@@ -21,5 +23,7 @@ export default function PageHeader() {
             </Menu.Item>
           </Menu>
         </Header>
+        </Col>
+        </Row>
     )
 }

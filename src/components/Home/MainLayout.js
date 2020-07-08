@@ -4,14 +4,16 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import ArticleList from '../ArticleList';
 import PopularTagPane from './PopularTagPane';
-import agent from '../../agent';
 
 
 import {
   APPLY_TAG_FILTER,
-  CHANGE_PAGE,
   LOAD_ARTICLE,
-  HOME_PAGE_UNLOADED
+  LOAD_HOME_PAGE,
+  LOAD_POPULAR_TAG,
+  REFRESH_TABS,
+  NEW_TAB,
+  CLICK_ON_TAB
 } from '../../constants/action';
 
 
@@ -19,22 +21,34 @@ export default function MainLayout() {
 
     const { TabPane } = Tabs;
 
-    const { articles, tag, selectedTab, page, size, articlesCount, popularTag } = useSelector(state => state);
+    const { articles, tag, page, size, articlesCount, popularTag, panes, selectedTab } = useSelector(state => state.home);
     const dispatch = useDispatch();
+    // let panes = ['Your Feed', 'Global Feed', '#sfa']
 
-    const loadArticle = async(page, tag) => {
-      dispatch({ type: CHANGE_PAGE, payload: await agent.Articles.all(page, size, tag), page : page});
+    const changePage = (page) => {
+      dispatch({ type: LOAD_ARTICLE, page: page, tag: tag });
     }
 
-    const filterArticleByTag = async(tag) => {
+    const filterArticleByTag = (tag) => {
       const tagValue = tag.item;
-      dispatch({ type: APPLY_TAG_FILTER, payload: await agent.Articles.byTag(tagValue), tag: tagValue});
+      // console.log(tagValue);
+      
+      dispatch({ type: APPLY_TAG_FILTER, payload: tagValue});
+    }
+
+    const changeTab = (key, event) => {
+      // console.log('Tab=',key);
+      dispatch({ type: CLICK_ON_TAB, payload: key}) 
     }
 
     useEffect(() => {
+      dispatch({ type: LOAD_ARTICLE });
+      dispatch({ type: LOAD_POPULAR_TAG });
+      /*
       return () => {
         dispatch({ type: HOME_PAGE_UNLOADED })
       }
+      */
     }, []);
 
     return (
@@ -42,20 +56,33 @@ export default function MainLayout() {
           <Col span={18}>
             <Row>
               <Col span={18} offset={6}>
-                <Tabs defaultActiveKey="global" activeKey={selectedTab} onTabClick={() => {}}>
-                  <TabPane tab="Global Feed" key="global">
-                   <ArticleList source={articles} loadArticle={loadArticle} page={page} tag={''} total={articlesCount}/>
-                  </TabPane>
-                  <TabPane tab={tag} key="some-tag">
-                    <ArticleList source={articles} loadArticle={loadArticle} page={page} tag={tag} total={articlesCount}/>
-                  </TabPane>
+                <Tabs defaultActiveKey={panes[0]} activeKey={selectedTab} onTabClick={(k, e) => changeTab(k, e)}>
+                  {panes.map(pane => {
+                    return (
+                      <TabPane tab={pane} key={pane}>
+                        <ArticleList tabName={pane} source={articles} loadArticle={changePage} currentPage={page} total={articlesCount}/>
+                      </TabPane>    
+                    )
+                  })}
                 </Tabs>
               </Col>
             </Row>
           </Col>
           <Col span={6}>
-              {popularTag ? <PopularTagPane tags={popularTag} filterArticleByTag={filterArticleByTag} selectedTag={tag.slice(1)}/> : "There are no popular tag!"}
+              {popularTag ? <PopularTagPane tags={popularTag} filterArticleByTag={filterArticleByTag} selectedTag={tag}/> : "There are no popular tag!"}
           </Col>
         </Row>
     )
 }
+
+/*
+<TabPane tab="Your Feed" key="your">
+                    No articles are here... yet.
+                  </TabPane>
+                  <TabPane tab="Global Feed" key="global">
+                   <ArticleList source={articles} loadArticle={changePage} currentPage={page} total={articlesCount}/>
+                  </TabPane>
+                  <TabPane tab={tag} key="some-tag">
+                    <ArticleList source={articles} loadArticle={changePage} currentPage={page} total={articlesCount}/>
+                  </TabPane>
+                  */

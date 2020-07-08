@@ -1,37 +1,67 @@
-import { APPLY_TAG_FILTER, HOME_PAGE_LOADED, HOME_PAGE_UNLOADED, CHANGE_PAGE } from '../constants/action';
+import {
+    RENDER_ARTICLE,
+    APPLY_TAG_FILTER,
+    RENDER_POPULAR_TAG,
+    RENDER_HOME_PAGE,
+    REFRESH_TABS,
+    MODIFY_TAB
+} from '../constants/action';
 
-export default (state = {}, action) => {
+const initialState = {
+    panes: ['Your Feed', 'Global Feed'],
+    selectedTab: 'Your Feed',
+    tag: '',
+    popularTag: [],
+    articles: [],
+    articlesCount: 0,
+    page: 1,
+    size: 10
+};
+
+export default (state = initialState, action) => {    
     switch (action.type) {
-        case APPLY_TAG_FILTER:
+        case MODIFY_TAB:
             return {
                 ...state,
-                selectedTab: 'some-tag',
-                tag: `#${action.tag}`,
-                articles: action.payload.articles,
-                articlesCount: action.payload.articlesCount,
-                page: 1,
-                size: 10
+                panes: state.panes.length > 2 ? state.panes.slice(0, 2) : state.panes,
+                selectedTab: state.panes.length > 2 ? 'Your Feed' : action.payload,
             }
-        case HOME_PAGE_UNLOADED:
-            return {}
-        case HOME_PAGE_LOADED:                        
+        case REFRESH_TABS:
+            return {
+                ...state,
+                selectedTab: 'Your Feed',
+                panes: state.panes.length > 2 ? state.panes.slice(0, 2) : state.panes
+            }
+        case RENDER_HOME_PAGE:
             return {
                 ...state,
                 tag: '',
-                selectedTab: 'global',
-                popularTag: action.payload.tags,
+                panes: localStorage.getItem('token') ? state.panes : state.panes.slice(1),
                 articles: action.payload.articles,
                 articlesCount: action.payload.articlesCount,
                 page: 1,
                 size: 10
             }
-        case CHANGE_PAGE:  
+        case RENDER_ARTICLE:
             return {
                 ...state,
+                panes: localStorage.getItem('token') ? state.panes : state.panes.slice(1),
                 articles: action.payload.articles,
                 articlesCount: action.payload.articlesCount,
-                size: 10,
-                page: action.page
+                page: action.payload.page || 1,
+                size: 10
+            }
+        case RENDER_POPULAR_TAG:
+            return {
+                ...state,
+                popularTag: action.payload.tags
+            }
+        case APPLY_TAG_FILTER:
+            return {
+                ...state,
+                selectedTab: action.payload,
+                panes: [...state.panes.slice(0,2), action.payload],
+                tag: action.payload
             }
         default:
             return state;
