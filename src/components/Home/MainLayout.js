@@ -11,9 +11,8 @@ import {
   LOAD_ARTICLE,
   LOAD_HOME_PAGE,
   LOAD_POPULAR_TAG,
-  REFRESH_TABS,
-  NEW_TAB,
-  CLICK_ON_TAB
+  CLICK_ON_TAB,
+  LOAD_TAB
 } from '../../constants/action';
 
 
@@ -22,6 +21,7 @@ export default function MainLayout() {
     const { TabPane } = Tabs;
 
     const { articles, tag, page, size, articlesCount, popularTag, panes, selectedTab } = useSelector(state => state.home);
+    const { isLoggedIn } = useSelector(state => state.user);
     const dispatch = useDispatch();
     // let panes = ['Your Feed', 'Global Feed', '#sfa']
 
@@ -41,7 +41,13 @@ export default function MainLayout() {
     }
 
     useEffect(() => {
-      dispatch({ type: LOAD_HOME_PAGE });
+      console.log('Logged in?',isLoggedIn);
+      
+      if (!isLoggedIn) {
+        dispatch({ type: LOAD_HOME_PAGE });
+      } else {
+        dispatch({ type: LOAD_TAB })
+      }
       dispatch({ type: LOAD_POPULAR_TAG });
       
       return () => {
@@ -50,7 +56,7 @@ export default function MainLayout() {
     }, []);
 
     return (
-        <Row>
+        <Row className="container">
           <Col span={18}>
             <Row>
               <Col span={18} offset={6}>

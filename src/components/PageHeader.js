@@ -13,13 +13,13 @@ export default function PageHeader() {
           </Link>
           <Menu mode="horizontal" style={{float: "right"}}>
             <Menu.Item key="home">
-              <Link to="/">Home</Link>
+              <Link className="header-item" to="/">Home</Link>
             </Menu.Item>
             <Menu.Item key="signin">
-              <Link to="/signin">Sign in</Link>
+              <Link className="header-item" to="/signin">Sign in</Link>
             </Menu.Item>
             <Menu.Item key="signup">
-              <Link to="/signup">Sign up</Link>
+              <Link className="header-item" to="/signup">Sign up</Link>
             </Menu.Item>
           </Menu>
         </Header>

@@ -9,8 +9,7 @@ import PageFooter from '../PageFooter';
 export default function Home() {
     return (
         <>
-        {localStorage.getItem('token') ? <PageHeaderLoggedIn /> : <PageHeader />}
-            
+            {localStorage.getItem('token') ? <PageHeaderLoggedIn /> : <PageHeader />}
             <Banner />
             <MainLayout />
             <PageFooter />

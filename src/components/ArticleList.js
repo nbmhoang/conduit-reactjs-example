@@ -1,6 +1,5 @@
 import React from 'react';
 
-import dayjs from 'dayjs';
 import { Avatar, List, Pagination, Tag } from 'antd';
 import { Link } from 'react-router-dom';
 
@@ -8,7 +7,7 @@ import { HeartFilled } from '@ant-design/icons';
 
 
 function ArticleList({tabName, source, loadArticle, currentPage, total}) {
-
+    
     if (tabName === 'Your Feed') {
         return (
             <>
@@ -49,17 +48,15 @@ function ArticleList({tabName, source, loadArticle, currentPage, total}) {
                             <ArticleTag article={item} />,
                         ]}
                         extra={
-                            <>
-                                <div className="favorite-button">
-                                    <HeartFilled /> {item.favoritesCount}
-                                </div>
-                            </>
+                            <div className={`favorite-button${item.favorited ? ' favorited-article' : ' '+item.favorited}`}>
+                                <HeartFilled /> {item.favoritesCount}
+                            </div>
                         }
                         >
                         <List.Item.Meta
                         avatar={<Avatar src={item.author.image} />}
                         title={<Link className="user" to="/user">{item.author.username}</Link>}
-                        description={dayjs(item.createdAt).format('ddd MMM DD YYYY')}
+                        description={new Date(item.createdAt).toDateString()}
                         />
                         <Link className="post-preview" to={`/article/${item.slug}`}>
                             <div className="post-title">{item.title}</div>

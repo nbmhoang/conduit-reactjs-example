@@ -27,17 +27,17 @@ export default function PageHeaderLoggedIn() {
                 </Link>
                 <Menu mode="horizontal" style={{float: "right"}}>
                     <Menu.Item key="home">
-                        <Link to="/">Home</Link>
+                        <Link className="header-item" to="/">Home</Link>
                     </Menu.Item>
                     <Menu.Item key="newpost">
-                        <Link to="/newpost"><EditFilled />New Post</Link>
+                        <Link className="header-item" to="/newpost"><EditFilled />New Post</Link>
                     </Menu.Item>
                     <Menu.Item key="setting">
-                        <Link to="/setting"><SettingFilled />Setting</Link>
+                        <Link className="header-item" to="/setting"><SettingFilled />Setting</Link>
                     </Menu.Item>
                     <Menu.Item key="x">
-                        <Link to={`/@${username}`}>
-                            <Avatar src={image} />
+                        <Link className="header-item" to={`/@${username}`}>
+                            <Avatar src={image} style={{marginRight: "5px"}}/>
                             {username}
                         </Link>
                     </Menu.Item>

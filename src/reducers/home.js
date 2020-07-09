@@ -3,8 +3,8 @@ import {
     APPLY_TAG_FILTER,
     RENDER_POPULAR_TAG,
     RENDER_HOME_PAGE,
-    REFRESH_TABS,
-    MODIFY_TAB
+    CHANGE_TAB,
+    RENDER_TAB
 } from '../constants/action';
 
 const initialState = {
@@ -21,17 +21,24 @@ const initialState = {
 
 export default (state = initialState, action) => {    
     switch (action.type) {
-        case MODIFY_TAB:
+        // Just render tab on home page(not data)
+        case RENDER_TAB:
             return {
                 ...state,
-                panes: state.panes.length > state.maxTab ? state.panes.slice(0, state.maxTab) : state.panes,
-                selectedTab: state.panes.length > state.maxTab ? state.panes[0] : action.payload,
+                panes: localStorage.getItem('token') ? ['Your Feed', 'Global Feed'] : ['Global Feed'],
+                maxTab: localStorage.getItem('token') ? 3 : 2,
+                selectedTab: state.panes[0]
             }
-        case REFRESH_TABS:
+        // When user click on a tab
+        // If user click on Global tab => Fetch data
+        // Otherwise, reset data
+        case CHANGE_TAB:
             return {
                 ...state,
-                selectedTab: 'Your Feed',
-                panes: state.panes.length > 2 ? state.panes.slice(0, 2) : state.panes
+                articles: [],
+                articlesCount: 0,
+                panes: state.panes.length > state.maxTab ? state.panes.slice(0, state.maxTab) : state.panes,
+                selectedTab: state.panes.indexOf(action.payload) >= state.maxTab ? state.panes[0] : action.payload,
             }
         case RENDER_HOME_PAGE:
             return {
@@ -39,20 +46,19 @@ export default (state = initialState, action) => {
                 tag: '',
                 panes: localStorage.getItem('token') ? ['Your Feed', 'Global Feed'] : ['Global Feed'],
                 maxTab: localStorage.getItem('token') ? 2 : 1,
-                selectedTab: state.panes[0],
-                articles: localStorage.getItem('token') ? [] : action.payload.articles,
-                articlesCount: localStorage.getItem('token') ? 0 :action.payload.articlesCount,
+                selectedTab: action.payload.targetTab || state.panes[0],
+                articles: action.payload.articles,
+                articlesCount: action.payload.articlesCount,
                 page: 1,
                 size: 10
             }
         case RENDER_ARTICLE:
             return {
                 ...state,
-                // panes: localStorage.getItem('token') ? ['Your Pane', 'Global Feed'] : ['Global Feed'],
-                selectedTab: action.payload.tag,
                 maxTab: localStorage.getItem('token') ? 2 : 1,
                 articles: action.payload.articles,
                 articlesCount: action.payload.articlesCount,
+                tag: action.payload.tag,
                 page: action.payload.page || 1,
                 size: 10
             }
@@ -61,6 +67,7 @@ export default (state = initialState, action) => {
                 ...state,
                 popularTag: action.payload.tags
             }
+        // When user click any tags on pupolar tag
         case APPLY_TAG_FILTER:
             return {
                 ...state,

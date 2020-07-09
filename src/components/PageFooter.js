@@ -1,12 +1,12 @@
 import React from 'react';
-
 import { Layout } from 'antd';
+import { GithubOutlined } from '@ant-design/icons'
 
 export default function PageFooter() {
     const {Footer} = Layout;
     return (
         <Footer>
-          <h3>Fork on Github</h3>
+          <a href="https://github.com/expressyoona/conduit-reactjs-example" target="_blank"><GithubOutlined /> Fork on Github</a>
         </Footer>
     )
 }

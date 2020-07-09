@@ -118,6 +118,11 @@ code {
   background-color: #5cb85c;
 }
 
+.favorited-article {
+  color: white;
+  background-color: #5cb85c;
+}
+
 .button-submit {
   border: none !important;
   background-color: #5cb85c !important;
@@ -177,4 +182,33 @@ code {
   float: none !important;
   font-size: 10px !important;
   margin: 0px 2px !important;
+}
+
+.user-comment {
+  padding-left: 10px;
+  border: 1px solid rgb(195, 195, 195) !important;
+  border-radius: 6px;
+  margin-top: 15px;
+}
+
+.error {
+  font-weight: bold;
+  color: red;
+}
+
+.header-item {
+  color: rgba(0, 0, 0, .3) !important;
+}
+
+Footer {
+  font-size: 16px !important;
+  text-align: center;
+  margin-top: 40px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.container {
+  margin-bottom: 90px;
 }

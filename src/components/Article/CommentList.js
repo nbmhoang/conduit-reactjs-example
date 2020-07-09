@@ -32,7 +32,7 @@ export default function UserComment({ slug, commentList }) {
                     author={item.author.username}
                     avatar={<Avatar src={item.author.image} />}
                     content={item.body}
-                    datetime={item.createdAt}
+                    datetime={new Date(item.createdAt).toDateString()}
                     actions={canDelete(item)}
                 />
             )

@@ -1,6 +1,7 @@
 import {
     RENDER_ARTICLE_PAGE,
-    RENDER_ARTICLE_COMMENT
+    RENDER_ARTICLE_COMMENT,
+    APPEND_COMMENT
 } from '../constants/action';
 
 const initialState = {
@@ -11,6 +12,7 @@ const initialState = {
     createdAt: '',
     body: '',
     user: '',
+    favorited: false,
     comments: []
 }
 
@@ -23,6 +25,7 @@ export default (state=initialState, action) => {
                 slug: action.payload.slug,
                 tagList: action.payload.tagList,
                 avatar: action.payload.author.image,
+                favorited: action.payload.favorited,
                 createdAt: action.payload.createdAt,
                 body: action.payload.body,
                 user: action.payload.author.username
@@ -31,6 +34,11 @@ export default (state=initialState, action) => {
             return {
                 ...state,
                 comments: action.payload
+            }
+        case APPEND_COMMENT:            
+            return {
+                ...state,
+                comments: [action.payload.comment, ...state.comments]
             }
         default:
             return state;

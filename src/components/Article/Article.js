@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 import PageHeaderLoggedIn from '../PageHeaderLoggedIn';
 import PageHeader from '../PageHeader';
+import PageFooter from '../PageFooter';
 import CommentBox from './Comment';
 import UserComment from './CommentList';
 import {
@@ -27,7 +28,8 @@ export default function Article({ match: {params: { id}}}) {
     }, []);
 
     return (
-        <Row className="article-detail">
+        <>
+        <Row className="article-detail container">
             <Col span={24}>
                 <Col>
                     {isLoggedIn ? <PageHeaderLoggedIn /> : <PageHeader />}
@@ -39,7 +41,7 @@ export default function Article({ match: {params: { id}}}) {
                         <Avatar className="article-detail-avatar" src={avatar}/>
                         <div style={{display: "inline-block"}}>
                             <div className="article-detail-user">{user}</div>
-                            <div className="article-detail-date">{createdAt}</div>
+                            <div className="article-detail-date">{new Date(createdAt).toDateString()}</div>
                         </div>
                     </Col>
                     </div>
@@ -57,14 +59,21 @@ export default function Article({ match: {params: { id}}}) {
                 <hr />
                 {isLoggedIn ? 
                     <Col span={20} offset={2}>
-                        <CommentBox />
+                        <CommentBox slug={slug} />
                         <UserComment slug={slug} commentList={comments} />
                     </Col> : 
                     <Col span={12} offset={4} style={{marginTop: "40px"}}>
                         <Link to='/signin'>Sign in</Link> or <Link to='/signup'>sign up</Link> to add comments on this article.
                     </Col>
                 }
+                
             </Col>
+            <Col span={6}></Col>
+            
+                
+            
         </Row>
+        <PageFooter />
+        </>
     )
 }
