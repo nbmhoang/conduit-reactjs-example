@@ -8,8 +8,9 @@ import {
 } from '../constants/action';
 
 const initialState = {
-    panes: ['Your Feed', 'Global Feed'],
-    selectedTab: 'Your Feed',
+    panes: [],
+    maxTab: 0,
+    selectedTab: '',
     tag: '',
     popularTag: [],
     articles: [],
@@ -23,8 +24,8 @@ export default (state = initialState, action) => {
         case MODIFY_TAB:
             return {
                 ...state,
-                panes: state.panes.length > 2 ? state.panes.slice(0, 2) : state.panes,
-                selectedTab: state.panes.length > 2 ? 'Your Feed' : action.payload,
+                panes: state.panes.length > state.maxTab ? state.panes.slice(0, state.maxTab) : state.panes,
+                selectedTab: state.panes.length > state.maxTab ? state.panes[0] : action.payload,
             }
         case REFRESH_TABS:
             return {
@@ -36,16 +37,20 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 tag: '',
-                panes: localStorage.getItem('token') ? state.panes : state.panes.slice(1),
-                articles: action.payload.articles,
-                articlesCount: action.payload.articlesCount,
+                panes: localStorage.getItem('token') ? ['Your Feed', 'Global Feed'] : ['Global Feed'],
+                maxTab: localStorage.getItem('token') ? 2 : 1,
+                selectedTab: state.panes[0],
+                articles: localStorage.getItem('token') ? [] : action.payload.articles,
+                articlesCount: localStorage.getItem('token') ? 0 :action.payload.articlesCount,
                 page: 1,
                 size: 10
             }
         case RENDER_ARTICLE:
             return {
                 ...state,
-                panes: localStorage.getItem('token') ? state.panes : state.panes.slice(1),
+                // panes: localStorage.getItem('token') ? ['Your Pane', 'Global Feed'] : ['Global Feed'],
+                selectedTab: action.payload.tag,
+                maxTab: localStorage.getItem('token') ? 2 : 1,
                 articles: action.payload.articles,
                 articlesCount: action.payload.articlesCount,
                 page: action.payload.page || 1,
@@ -60,7 +65,7 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 selectedTab: action.payload,
-                panes: [...state.panes.slice(0,2), action.payload],
+                panes: [...state.panes.slice(0, state.maxTab), action.payload],
                 tag: action.payload
             }
         default:
