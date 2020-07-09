@@ -1,4 +1,4 @@
-import { all, call, put, takeEvery, take } from 'redux-saga/effects';
+import { all, call, put, takeEvery } from 'redux-saga/effects';
 import axios from 'axios';
 
 import {
@@ -13,12 +13,20 @@ import {
     LOAD_ARTICLE_PAGE,
     RENDER_ARTICLE_PAGE,
     LOGIN,
-    LOGGIN_SUCCESS,
+    LOGIN_SUCCESS,
     CLICK_ON_TAB,
-    MODIFY_TAB
+    MODIFY_TAB,
+    LOAD_CURRENT_USER,
+    RENDER_CURRENT_USER,
+    LOAD_ARTICLE_COMMENT,
+    RENDER_ARTICLE_COMMENT,
+    DELETE_COMMENT,
+    LOGIN_FAILED
 } from '../constants/action';
+import { authHeader } from '../components/AuthorizationHeader';
 
-axios.default.baseURL = 'https://conduit.productionready.io'
+// axios.default.baseURL = 'https://conduit.productionready.io';
+axios.defaults.baseURL = 'https://conduit.productionready.io'
 
 const { get, post } = axios;
 
@@ -35,7 +43,7 @@ export function* fetchAllArticle(action) {
     const page = action.page || 1;
     const size = action.size || 10;
     const tag = action.tag || '';
-    console.log('url=',`/api/articles?limit=${size}&offset=${(page-1)*size}&tag=${tag}`);
+    // console.log('url=',`/api/articles?limit=${size}&offset=${(page-1)*size}&tag=${tag}`);
     
     const endpoint = `/api/articles?limit=${size}&offset=${(page-1)*size}&tag=${tag}`;
     const response = yield call(get, endpoint);
@@ -100,14 +108,16 @@ export function* login(action) {
     const endpoint = '/api/users/login';
     try {
         const response = yield call(post, endpoint, action.payload);    
-        const data = response.data;
+        const data = response.data.user;
         console.log('Res',data);
-        yield localStorage.setItem('token', data.user.token);
-        yield put({ type: LOGGIN_SUCCESS, payload: data})
+        yield localStorage.setItem('token', data.token);
+        yield put({ type: LOGIN_SUCCESS, payload: data});
     } catch (error) {
-        //console.log(axios);
+        // console.log(err.response);
         
-        console.log('Error', error);
+        if (error.response.data && error.response.data.errors) {
+            yield put({ type: LOGIN_FAILED, payload: error.response.data.errors })
+        }
     }
 }
 
@@ -124,6 +134,67 @@ export function* watchChangeTab() {
     yield takeEvery( CLICK_ON_TAB, changeTab);
 }
 
+export function* fetchCurrentUser() {
+    const endpoint = '/api/user';
+    try {
+        const response = yield call(get, endpoint, {headers: authHeader()});
+        // console.log(response.data);
+        const data = response.data.user;
+        yield put({ type: RENDER_CURRENT_USER, payload: data });
+    } catch (error) {
+        
+    }
+}
+
+export function* watchFetchCurrentUser() {
+    yield takeEvery( LOAD_CURRENT_USER, fetchCurrentUser );
+}
+
+export function* fetchArticleComment(action) {
+    const endpoint = `/api/articles/${action.slug}/comments`;
+    try {
+        const response = yield call(get, endpoint);
+        const data = response.data.comments;
+        yield put({ type: RENDER_ARTICLE_COMMENT, payload: data });
+    } catch (error) {
+        
+    }
+}
+
+export function* watchFetchArticleComment() {
+    yield takeEvery( LOAD_ARTICLE_COMMENT, fetchArticleComment);
+}
+
+export function* deleteComment(action) {
+    // console.log('Delete',action.payload);
+    const endpoint = `/api/articles/${action.payload.slug}/comments/${action.payload.commentId}`;
+    try {
+        const response = yield call(axios.delete, endpoint, { headers: authHeader() });
+        const { data } = response;
+        console.log(data);
+        yield put({ type: LOAD_ARTICLE_COMMENT, slug: action.payload.slug})
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
+
+export function* watchDeleteComment() {
+    yield takeEvery( DELETE_COMMENT, deleteComment);
+}
+
 export default function* rootSaga() {
-    yield all([watchFetchAllArticle(), watchFetchPopularTag(), watchFetchArticleByTag(), watchPageChange(), watchHomepage(), watchFetchArticleDetail(), watchLogin(), watchChangeTab()]);
+    yield all([
+        watchFetchAllArticle(),
+        watchFetchPopularTag(),
+        watchFetchArticleByTag(),
+        watchPageChange(),
+        watchHomepage(),
+        watchFetchArticleDetail(),
+        watchLogin(),
+        watchChangeTab(),
+        watchFetchCurrentUser(),
+        watchFetchArticleComment(),
+        watchDeleteComment()
+    ]);
 }
