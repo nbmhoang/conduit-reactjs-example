@@ -37,18 +37,16 @@ export default function MainLayout() {
     }
 
     const changeTab = (key, event) => {
-      // console.log('Tab=',key);
       dispatch({ type: CLICK_ON_TAB, payload: key}) 
     }
 
     useEffect(() => {
-      dispatch({ type: LOAD_ARTICLE });
+      dispatch({ type: LOAD_HOME_PAGE });
       dispatch({ type: LOAD_POPULAR_TAG });
-      /*
+      
       return () => {
-        dispatch({ type: HOME_PAGE_UNLOADED })
+        dispatch({ type: "RESET" })
       }
-      */
     }, []);
 
     return (
