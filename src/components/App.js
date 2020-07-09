@@ -22,7 +22,10 @@ const App = ({ store }) => {
             <Route exact path="/" component={Home} />
             <Route exact path="/signin" component={SignIn} />
             <Route exact path="/signup" component={SignUp} />
+            <Route exact path="/newpost" />
+            <Route exact path="/setting" />
             <Route exact path="/article/:id" component={Article}  />
+            <Route exact path="/@:username" />
           </Switch>
         </BrowserRouter>
       </Layout>
