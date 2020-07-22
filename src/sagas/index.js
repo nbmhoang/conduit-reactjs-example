@@ -128,8 +128,6 @@ export function* watchLogin() {
 export function* changeTab(action) {
     const targetTab = action.payload;
     console.log('Target=',targetTab);
-    
-    // Nếu click vào Global Feed, load home page
     if (targetTab === 'Global Feed') {
         yield put({ type: LOAD_HOME_PAGE, payload: { targetTab: targetTab } })
     } else {
@@ -176,8 +174,7 @@ export function* deleteComment(action) {
     // console.log('Delete',action.payload);
     const endpoint = `/api/articles/${action.payload.slug}/comments/${action.payload.commentId}`;
     try {
-        const response = yield call(axios.delete, endpoint, { headers: authHeader() });
-        const { data } = response;
+        yield call(axios.delete, endpoint, { headers: authHeader() });
         yield put({ type: LOAD_ARTICLE_COMMENT, slug: action.payload.slug})
     } catch (error) {
         console.log(error);
