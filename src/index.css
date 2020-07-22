@@ -212,3 +212,7 @@ Footer {
 .container {
   margin-bottom: 90px;
 }
+
+.filter-pane {
+  margin: 20px !important;
+}
