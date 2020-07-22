@@ -10,7 +10,8 @@ import createSagaMiddleware from 'redux-saga';
 
 // import { loadArticle, loadPopularTag } from './constants/action';
 import rootReducers from './reducers';
-import rootSaga from './sagas';
+// import rootSaga from './sagas';
+import rootSaga from './sagas/book-sagas';
 
 const sagaMiddleware = createSagaMiddleware();
 const store = createStore(
