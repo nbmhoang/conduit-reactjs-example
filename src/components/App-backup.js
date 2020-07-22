@@ -7,8 +7,10 @@ import '../index.css';
 import { Provider } from 'react-redux'
 import PropTypes from 'prop-types';
 
-import Home from './Book';
-import BookDetail from './BookDetail';
+import Home from './Home';
+import SignIn from './SignIn';
+import SignUp from './SignUp';
+import Article from './Article/Article';
 
 const App = ({ store }) => {
 
@@ -18,7 +20,12 @@ const App = ({ store }) => {
         <BrowserRouter>
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route exact path="/book/:slug" component={BookDetail} />
+            <Route exact path="/signin" component={SignIn} />
+            <Route exact path="/signup" component={SignUp} />
+            <Route exact path="/newpost" />
+            <Route exact path="/setting" />
+            <Route exact path="/article/:id" component={Article}  />
+            <Route exact path="/@:username" />
           </Switch>
         </BrowserRouter>
       </Layout>
