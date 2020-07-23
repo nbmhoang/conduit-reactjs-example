@@ -1,48 +1,61 @@
 import { all, call, put, takeEvery } from 'redux-saga/effects';
 import axios from 'axios';
 
+import { baseURL } from '../constants/config';
 import {
     LOAD_BOOK_HOME,
-    RENDER_BOOK_HOME,
-    RENDER_ALL_BOOK,
+    RENDER_LIST_BOOK,
     LOAD_BOOK_DETAIL,
     RENDER_BOOK_DETAIL,
-    LOAD_ALL_AUTHOR,
-    RENDER_ALL_AUTHOR,
-    LOAD_ALL_CATEGORY,
-    RENDER_ALL_CATEGORY,
-    APPLY_FILTER_BOOK
+    APPLY_FILTER_BOOK,
+    LOAD_MORE_BOOK,
+    CHANGE_ORDER,
+    RENDER_MORE_BOOK
 } from '../constants/action';
 import {
+    GET_DATA,
     FILTER_BOOK,
-    GET_AUTHORS,
     GET_BOOK,
-    GET_BOOKS,
-    GET_CATEGORIES
 } from '../graphql/query';
 
-const baseURL = 'http://localhost:9999/admin/api';
-
-const request = axios.post;
+const graphql = (query, variables={}) => {
+    return axios.post(baseURL, {
+        query,
+        variables
+    }).then(res => res).catch(err => console.log(err));
+};
 
 export function* fetchHomePage(action) {
-    let response = yield call(request, baseURL, { query: GET_BOOKS, variables: action.payload });
-    const books = response.data.data.allBooks;
+    // console.log('Current order by', action.payload.orderBy);
+    const response = yield call(graphql, GET_DATA, action.payload)
+    const { books, categories, authors } = response.data.data;
     const { count } = response.data.data._allBooksMeta;
-    response = yield call(request, baseURL, { query: GET_CATEGORIES });
-    const categories = response.data.data.allCategories;
-    response = yield call(request, baseURL, { query: GET_AUTHORS });
-    const authors = response.data.data.allAuthors;
     const page = action.payload.page + 1;
-    yield put({ type: RENDER_BOOK_HOME, payload: { books, categories, authors, count, page } })
+    const { orderBy } = action.payload;
+    if (action.type === CHANGE_ORDER) {
+        // Set order
+        yield put({ type: RENDER_LIST_BOOK, payload: { orderBy, books, categories, authors, count, page } })
+    } else {
+        // Load homepage or more books
+        yield put({ type: RENDER_MORE_BOOK, payload: { books, categories, authors, count, page } })
+    }
+    
 }
 
 export function* watchFetchHomePage() {
     yield takeEvery(LOAD_BOOK_HOME, fetchHomePage);
 }
 
+export function* watchFetchMoreBook() {
+    yield takeEvery(LOAD_MORE_BOOK, fetchHomePage);
+}
+
+export function* watchChangeOrder() {
+    yield takeEvery(CHANGE_ORDER, fetchHomePage);
+}
+
 export function* fetchBook(action) {
-    const response = yield call(request, baseURL, { query: GET_BOOK, variables: { id: action.payload } });
+    const response = yield call(graphql, GET_BOOK, { id: action.payload })
     const data = response.data.data.Book;
     yield put({ type: RENDER_BOOK_DETAIL, payload: data });
 }
@@ -51,43 +64,33 @@ export function* watchFetchBook() {
     yield takeEvery(LOAD_BOOK_DETAIL, fetchBook);
 }
 
-export function* fetchAllCategory() {
-    const response = yield call(request, baseURL, { query: GET_CATEGORIES });
-    const data = response.data.data.allCategories;
-    yield put({ type: RENDER_ALL_CATEGORY, payload: data });
-}
-
-export function* watchFetchAllCategory() {
-    yield takeEvery(LOAD_ALL_CATEGORY, fetchAllCategory);
-}
-
-export function* fetchAllAuthor() {
-    const response = yield call(request, baseURL, { query: GET_AUTHORS });
-    const data = response.data.data.allAuthors;
-    yield put({ type: RENDER_ALL_AUTHOR, payload: data });
-}
-
-export function* watchFetchAllAuthor() {
-    yield takeEvery(LOAD_ALL_AUTHOR, fetchAllAuthor);
-}
-
 export function* fetchFilterBook(action) {
-    const response = yield call(request, baseURL, { query: FILTER_BOOK, variables: action.payload });
-    const books = response.data.data.allBooks;
+    const response = yield call(graphql, FILTER_BOOK, action.payload)
+    const { books } = response.data.data;
     const { count } = response.data.data._allBooksMeta;
-    yield put({ type: RENDER_ALL_BOOK, payload: { books, count } });
+    const page = action.payload.page + 1;
+    yield put({ type: RENDER_LIST_BOOK, payload: { books, count, page } });
 }
 
 export function* watchFetchFilterBook() {
     yield takeEvery(APPLY_FILTER_BOOK, fetchFilterBook);
 }
 
+export function* clearHomePageData() {
+    yield put({ type: "XYZ" });
+}
+
+export function* watchClearHomePageData() {
+    yield takeEvery("CLEAR", clearHomePageData);
+}
+
 export default function* rootSaga() {
     yield all([
         watchFetchBook(),
-        watchFetchAllCategory(),
-        watchFetchAllAuthor(),
         watchFetchFilterBook(),
         watchFetchHomePage(),
+        watchClearHomePageData(),
+        watchFetchMoreBook(),
+        watchChangeOrder(),
     ]);
 } 
