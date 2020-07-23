@@ -216,3 +216,12 @@ Footer {
 .filter-pane {
   margin: 20px !important;
 }
+
+.ant-descriptions-item-label {
+  font-size: 18px !important;
+  font-weight: bold !important;
+}
+
+.ant-descriptions-item-content {
+  font-size: 16px !important;
+}
