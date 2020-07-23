@@ -1,37 +1,39 @@
 import {
+    RENDER_MORE_BOOK,
     RENDER_BOOK_HOME,
-    RENDER_ALL_BOOK,
-    RENDER_ALL_AUTHOR,
-    RENDER_ALL_CATEGORY
+    RENDER_LIST_BOOK,
 } from '../constants/action';
 
 const inititalState = {
     books: [],
     authors: [],
     categories: [],
-    count: 0,
+    more: false,
     page: 0, // Default offset is 0
-    size: 5 // Default items per page is 10
+    size: 5, // Default items per page is 5
+    orderBy: 'name_ASC'
 };
 
 export default (state=inititalState, action) => {
     switch(action.type) {
-        case RENDER_ALL_BOOK: 
+        case "XYZ":
+            return inititalState
+        case RENDER_MORE_BOOK:
             return {
                 ...state,
                 books: [...state.books, ...action.payload.books],
-                count: action.payload.count,
-                page: action.payload.page ? action.payload.page : 0 
+                authors: action.payload.authors,
+                categories: action.payload.categories,
+                page: action.payload.page ? action.payload.page : 0,
+                more: state.books.length + action.payload.books.length < action.payload.count,
             }
-        case RENDER_ALL_AUTHOR:
+        case RENDER_LIST_BOOK:
             return {
                 ...state,
-                authors: action.payload
-            }
-        case RENDER_ALL_CATEGORY:
-            return {
-                ...state,
-                categories: action.payload
+                books: action.payload.books,
+                page: action.payload.page ? action.payload.page : 0,
+                more: action.payload.books.length < action.payload.count,
+                orderBy: action.payload.orderBy
             }
         case RENDER_BOOK_HOME:
             return {
@@ -39,8 +41,8 @@ export default (state=inititalState, action) => {
                 books: [...state.books, ...action.payload.books],
                 authors: action.payload.authors,
                 categories: action.payload.categories,
-                count: action.payload.count,
-                page: action.payload.page ? action.payload.page : 0
+                page: action.payload.page ? action.payload.page : 0,
+                more: state.books.length + action.payload.books.length < action.payload.count,
             }
         default: return state
     }

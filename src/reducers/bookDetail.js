@@ -5,7 +5,7 @@ import {
 const inititalState = {
     id: 0,
     name: '',
-    category: '',
+    category: {},
     author: {},
     image: {},
     pageNumber: 0,
@@ -24,6 +24,7 @@ export default (state=inititalState, action) => {
                 pageNumber: action.payload.pageNumber,
                 image: action.payload.image,
                 author: action.payload.author,
+                category: action.payload.category,
                 numberInStorage: action.payload.numberInStorage,
                 publishDate: action.payload.publishDate,
                 describe: action.payload.describe
