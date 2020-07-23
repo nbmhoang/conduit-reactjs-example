@@ -37,8 +37,8 @@ export const APPEND_COMMENT = 'APPEND_COMMENT';
 export const POST_COMMENT = 'POST_COMMENT';
 
 // Book store
-export const LOAD_ALL_BOOK = 'LOAD_ALL_BOOK';
-export const RENDER_ALL_BOOK = 'RENDER_ALL_BOOK';
+export const LOAD_LIST_BOOK = 'LOAD_LIST_BOOK';
+export const RENDER_LIST_BOOK = 'RENDER_LIST_BOOK';
 
 export const LOAD_BOOK_DETAIL = 'LOAD_BOOK_DETAIL';
 export const RENDER_BOOK_DETAIL = 'RENDER_BOOK_DETAIL';
@@ -55,3 +55,6 @@ export const LOAD_BOOK_HOME = 'LOAD_BOOK_HOME';
 export const RENDER_BOOK_HOME = 'RENDER_BOOK_HOME';
 
 export const LOAD_MORE_BOOK = 'LOAD_MORE_BOOK';
+export const RENDER_MORE_BOOK = 'RENDER_MORE_BOOK';
+
+export const CHANGE_ORDER = 'CHANGE_ORDER';
